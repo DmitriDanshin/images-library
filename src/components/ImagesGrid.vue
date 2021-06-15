@@ -1,12 +1,52 @@
 <template>
   <section>
 
-    <div class="grid grid-cols-5 gap-4 mx-4">
+    <div class="grid grid-cols-5 gap-4 mx-4 ">
 
-      <div v-for="imagesColumn in images" class="h-full" :key="imagesColumn">
-        <div v-for="image in imagesColumn" class="mb-3 " :key="image">
-          <img class="w-full rounded-md" :style="{'height': `${image.height}`}" :src="image.url" alt="" loading="lazy"
+      <div v-for="imagesColumn in imagesColumns" class="h-full" :key="imagesColumn">
+        <div v-for="image in imagesColumn"
+             class="mb-3  transition duration-500 ease-in-out transform hover:opacity-80  cursor-pointer" :key="image">
+          <img class="w-full rounded-t-md" :style="{'height': `${image.height}`}" :src="image.url" alt="" loading="lazy"
                @load="normalizeHeightOfImage(image, imagesColumn, $event)">
+          <div class="h-1/5 w-full bg-gray-900 rounded-b-md text-white pb-1">
+
+            <div class="text-center">
+              {{ image.description }}
+            </div>
+
+            <div class="flex justify-between">
+              <div class="flex items-center ml-3">
+                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="comment"
+                     class="w-4 h-4" role="img" xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 512 512">
+                  <path fill="currentColor"
+                        d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32z"></path>
+                </svg>
+                <span class="mx-1">
+                  {{ image.comments ?? Math.floor(Math.random() * 1000) }}
+                </span>
+              </div>
+              <div class="flex items-center">
+                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="comment"
+                     class="w-5 h-4" role="img" xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 512 512">
+                  <path fill="currentColor"
+                        d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"></path>
+                </svg>
+                <span class="mx-1"> {{ image.views ?? Math.floor(Math.random() * 1000) }}</span>
+              </div>
+
+              <div class="flex items-center mr-3">
+                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="comment"
+                     class="w-5 h-4" role="img" xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 512 512">
+                  <path fill="currentColor"
+                        d="M104 224H24c-13.255 0-24 10.745-24 24v240c0 13.255 10.745 24 24 24h80c13.255 0 24-10.745 24-24V248c0-13.255-10.745-24-24-24zM64 472c-13.255 0-24-10.745-24-24s10.745-24 24-24 24 10.745 24 24-10.745 24-24 24zM384 81.452c0 42.416-25.97 66.208-33.277 94.548h101.723c33.397 0 59.397 27.746 59.553 58.098.084 17.938-7.546 37.249-19.439 49.197l-.11.11c9.836 23.337 8.237 56.037-9.308 79.469 8.681 25.895-.069 57.704-16.382 74.757 4.298 17.598 2.244 32.575-6.148 44.632C440.202 511.587 389.616 512 346.839 512l-2.845-.001c-48.287-.017-87.806-17.598-119.56-31.725-15.957-7.099-36.821-15.887-52.651-16.178-6.54-.12-11.783-5.457-11.783-11.998v-213.77c0-3.2 1.282-6.271 3.558-8.521 39.614-39.144 56.648-80.587 89.117-113.111 14.804-14.832 20.188-37.236 25.393-58.902C282.515 39.293 291.817 0 312 0c24 0 72 8 72 81.452z"></path>
+                </svg>
+                <span class="mx-1">{{ image.likes ?? Math.floor(Math.random() * 1000) }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -19,90 +59,17 @@ export default {
   name: "ImagesGrid",
   IMAGE_HEIGHT_LIMIT: 350,
 
+  computed: {
+    imagesColumns() {
+      return this.images;
+    }
+  },
 
-  data() {
-    return {
-      images: [
-        [
-          {
-            title: 'image',
-            url: 'https://media.istockphoto.com/photos/colored-powder-explosion-abstract-closeup-dust-on-backdrop-colorful-picture-id1072093690?k=6&m=1072093690&s=612x612&w=0&h=Eyk67XBt4sr3Bk1MubM6dHpvEVNICX4L7FumWhcTwuY=',
-          },
-          {
-            title: 'image',
-            url: 'https://images.ctfassets.net/hrltx12pl8hq/3MbF54EhWUhsXunc5Keueb/60774fbbff86e6bf6776f1e17a8016b4/04-nature_721703848.jpg?fit=fill&w=480&h=270',
-          },
-          {
-            title: 'image',
-            url: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg',
-          }
-        ],
-        [
-          {
-            title: 'image',
-            url: 'https://media.istockphoto.com/photos/business-man-pushing-large-stone-up-to-hill-business-heavy-tasks-and-picture-id825383494?k=6&m=825383494&s=612x612&w=0&h=pamh6qxyNPCnNAVru4BrAHt2qTHAGCD9lDiN_6MbaNY=',
-          },
-          {
-            title: 'image',
-            url: 'https://ichef.bbci.co.uk/news/999/cpsprodpb/15951/production/_117310488_16.jpg',
-          },
-          {
-            title: 'image',
-            url: 'https://purewows3.imgix.net/images/articles/2020_03/calming-pictures-cat.jpg?auto=format,compress&cs=strip',
-          },
-
-        ],
-        [
-          {
-            title: 'image',
-            url: 'https://tourspoland.com/images/Pictures_Poland/beautiful_sunset_poland_sea.jpg',
-          },
-          {
-            title: 'image',
-            url: 'https://pbs.twimg.com/profile_images/1098225250469326848/2KN00JjZ_400x400.png',
-          },
-          {
-            title: 'image',
-            url: 'https://www.planetware.com/wpimages/2019/11/canada-in-pictures-beautiful-places-to-photograph-morraine-lake.jpg',
-          },
-
-        ],
-        [
-          {
-            title: 'image',
-            url: 'https://www.planetware.com/wpimages/2020/01/india-in-pictures-beautiful-places-to-photograph-taj-mahal.jpg',
-          },
-          {
-            title: 'image',
-            url: 'https://drifterplanet.com/wp-content/uploads/2017/12/Cancun-Private-Beach-Party.jpg',
-          },
-          {
-            title: 'image',
-            url: 'https://media.istockphoto.com/photos/villefranche-on-sea-in-evening-picture-id1145618475?k=6&m=1145618475&s=612x612&w=0&h=u6mv9zLy6WWdxnGxJ4i3bYOFQYJtxjmnkvgVoaGqf_U=',
-
-          },
-
-        ],
-        [
-          {
-            title: 'image',
-            url: 'https://media-exp1.licdn.com/dms/image/C4E1BAQE-Zxrt-01Idw/company-background_10000/0/1615323777521?e=2159024400&v=beta&t=8U_G8GwdzneRm4cihyeOfmKKJjk0e-qtZHmWqX4b1NQ',
-            height: 250,
-          },
-          {
-            title: 'image',
-            url: 'https://www.planetware.com/wpimages/2020/01/china-in-pictures-beautiful-places-to-photograph-the-great-wall.jpg',
-            height: 250,
-          },
-          {
-            title: 'image',
-            url: 'https://i.pinimg.com/originals/50/df/34/50df34b9e93f30269853b96b09c37e3b.jpg',
-            height: 250,
-          },
-
-        ],
-      ]
-    };
+  props: {
+    images: {
+      type: Array,
+      required: true,
+    },
   },
 
   methods: {
@@ -112,18 +79,17 @@ export default {
 
       if (event.target.height > this.$options.IMAGE_HEIGHT_LIMIT) {
 
-        const indexCol = this.images.indexOf(imagesColumn);
-        const indexImg = this.images[indexCol].indexOf(img);
+        // const indexCol = this.images.indexOf(imagesColumn);
+        // const indexImg = this.images[indexCol].indexOf(img);
 
         // event.target.style.height = `${this.$options.IMAGE_HEIGHT_LIMIT}px`;
         event.target.style.height = `auto`;
-        this.images[indexCol][indexImg] = img;
-        this.images = [...this.images];
+
 
       }
-
     },
   },
+
 }
 </script>
 
