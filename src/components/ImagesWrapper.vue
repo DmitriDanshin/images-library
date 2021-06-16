@@ -1,7 +1,9 @@
 <template>
 
+  <zoomed-image v-if="isZoomed" @close="closeZoomedImage"
+                :src="srcOfZoomedImage"/>
   <images-menu @open-editor="isOpenEditor = true" @close-editor="isOpenEditor = false"/>
-  <images-grid v-if="!isOpenEditor" :images="images"/>
+  <images-grid v-if="!isOpenEditor" :images="images" @zoom="zoomImage"/>
   <images-editor v-if="isOpenEditor" @back="isOpenEditor = false" @save="saveImage"/>
 
 </template>
@@ -10,6 +12,7 @@
 import ImagesMenu from "./ImagesMenu";
 import ImagesGrid from "./ImagesGrid";
 import ImagesEditor from "./ImagesEditor";
+import ZoomedImage from "./ZoomedImage";
 
 export default {
   name: "ImagesWrapper",
@@ -17,6 +20,8 @@ export default {
   data() {
     return {
       isOpenEditor: false,
+      isZoomed: false,
+      srcOfZoomedImage: '',
       imageToAdd: {},
       images: [
         [
@@ -109,6 +114,15 @@ export default {
       this.addImageToArray(img);
     },
 
+    zoomImage(image) {
+      this.srcOfZoomedImage = image.url;
+      this.isZoomed = true;
+    },
+
+    closeZoomedImage() {
+      this.isZoomed = false;
+    },
+
     addImageToArray(img) {
 
       const lengthsOfColumns = this.images.map(col => col.length);
@@ -120,7 +134,7 @@ export default {
 
     },
   },
-  components: {ImagesEditor, ImagesGrid, ImagesMenu}
+  components: {ZoomedImage, ImagesEditor, ImagesGrid, ImagesMenu}
 }
 </script>
 

@@ -7,7 +7,7 @@
         <div v-for="image in imagesColumn"
              class="mb-3  transition duration-500 ease-in-out transform hover:opacity-80  cursor-pointer" :key="image">
           <img class="w-full rounded-t-md" :style="{'height': `${image.height}`}" :src="image.url" alt="" loading="lazy"
-               @load="normalizeHeightOfImage(image, imagesColumn, $event)">
+               @load="normalizeHeightOfImage(image, imagesColumn, $event)" @click="zoom(image)">
           <div class="h-1/5 w-full bg-gray-900 rounded-b-md text-white pb-1">
 
             <div class="text-center">
@@ -59,10 +59,8 @@ export default {
   name: "ImagesGrid",
   IMAGE_HEIGHT_LIMIT: 350,
 
-  computed: {
-    imagesColumns() {
-      return this.images;
-    }
+  emits: {
+    'zoom': null
   },
 
   props: {
@@ -72,8 +70,17 @@ export default {
     },
   },
 
+  computed: {
+    imagesColumns() {
+      return this.images;
+    }
+  },
+
   methods: {
 
+    zoom(image) {
+      this.$emit('zoom', image);
+    },
 
     normalizeHeightOfImage(img, imagesColumn, event) {
 
