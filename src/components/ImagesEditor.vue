@@ -6,7 +6,7 @@
         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="src">
           src
         </label>
-        <input v-model="url"
+        <input v-model="image.src"
                class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                id="src" type="text" placeholder="src">
       </div>
@@ -15,7 +15,7 @@
         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="src">
           description
         </label>
-        <input v-model="description"
+        <input v-model="image.description"
                class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                id="description" type="text" placeholder="description">
       </div>
@@ -25,15 +25,15 @@
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="views">
             Views
           </label>
-          <input v-model="views"
+          <input v-model="image.views"
                  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                  id="views" type="text" placeholder="Views">
         </div>
         <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="likes">
-            Views
+            Likes
           </label>
-          <input v-model="likes"
+          <input v-model="image.likes"
                  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                  id="likes" type="text" placeholder="Likes">
         </div>
@@ -41,7 +41,7 @@
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="comments">
             Comments
           </label>
-          <input v-model="comments"
+          <input v-model="image.comments"
                  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                  id="comments" type="text" placeholder="Comments">
         </div>
@@ -55,15 +55,18 @@
         Save Image
       </button>
     </div>
-
+    <div class="w-56 h-96 ml-12 mt-12">
+      <image-card :image="image"/>
+    </div>
   </section>
 
 </template>
 
 <script>
+import ImageCard from "./ImageCard";
 export default {
   name: "ImagesEditor",
-
+  components: {ImageCard},
   emits: {
     'save': null,
     'back': null,
@@ -71,13 +74,13 @@ export default {
 
   data() {
     return {
-
-      url: '',
-      likes: 0,
-      comments: 0,
-      views: 0,
-      description: ''
-
+      image: {
+        src: 'https://picsum.photos/536/354',
+        likes: 0,
+        comments: 0,
+        views: 0,
+        description: ''
+      },
     }
   },
 
@@ -88,16 +91,7 @@ export default {
     },
 
     save() {
-
-      const image = {
-        url: this.url,
-        likes: this.likes,
-        comments: this.comments,
-        views: this.views,
-        description: this.description
-      };
-
-      this.$emit('save', image);
+      this.$emit('save', this.image);
       this.$emit('back');
     }
 
