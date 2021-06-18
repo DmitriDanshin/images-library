@@ -64,9 +64,12 @@
 
 <script>
 import ImageCard from "./ImageCard";
+
 export default {
+
   name: "ImagesEditor",
   components: {ImageCard},
+
   emits: {
     'save': null,
     'back': null,
@@ -75,7 +78,7 @@ export default {
   data() {
     return {
       image: {
-        src: 'https://picsum.photos/536/354',
+        src: `https://picsum.photos/536/${Math.floor(Math.random() * 300) + 200}`,
         likes: 0,
         comments: 0,
         views: 0,

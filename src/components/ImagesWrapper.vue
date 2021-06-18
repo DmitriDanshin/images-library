@@ -3,7 +3,7 @@
   <zoomed-image v-if="isZoomed" @close="closeZoomedImage"
                 :src="srcOfZoomedImage"/>
   <images-menu @open-editor="isOpenEditor = true" @close-editor="isOpenEditor = false"/>
-  <images-grid v-if="!isOpenEditor" :images="images" @zoom="zoomImage"/>
+  <images-grid v-if="!isOpenEditor" :images="images" @zoom="zoomImage" @delete-image="deleteImage"/>
   <images-editor v-if="isOpenEditor" @back="isOpenEditor = false" @save="saveImage"/>
 
 </template>
@@ -24,94 +24,34 @@ export default {
       srcOfZoomedImage: '',
       imageToAdd: {},
       images: [
-        [
-          {
-            title: 'image',
-            src: 'https://media.istockphoto.com/photos/colored-powder-explosion-abstract-closeup-dust-on-backdrop-colorful-picture-id1072093690?k=6&m=1072093690&s=612x612&w=0&h=Eyk67XBt4sr3Bk1MubM6dHpvEVNICX4L7FumWhcTwuY=',
-          },
-          {
-            title: 'image',
-            src: 'https://images.ctfassets.net/hrltx12pl8hq/3MbF54EhWUhsXunc5Keueb/60774fbbff86e6bf6776f1e17a8016b4/04-nature_721703848.jpg?fit=fill&w=480&h=270',
-          },
-          {
-            title: 'image',
-            src: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg',
-          }
-        ],
-        [
-          {
-            title: 'image',
-            src: 'https://media.istockphoto.com/photos/business-man-pushing-large-stone-up-to-hill-business-heavy-tasks-and-picture-id825383494?k=6&m=825383494&s=612x612&w=0&h=pamh6qxyNPCnNAVru4BrAHt2qTHAGCD9lDiN_6MbaNY=',
-          },
-          {
-            title: 'image',
-            src: 'https://ichef.bbci.co.uk/news/999/cpsprodpb/15951/production/_117310488_16.jpg',
-          },
-          {
-            title: 'image',
-            src: 'https://purewows3.imgix.net/images/articles/2020_03/calming-pictures-cat.jpg?auto=format,compress&cs=strip',
-          },
-
-        ],
-        [
-          {
-            title: 'image',
-            src: 'https://tourspoland.com/images/Pictures_Poland/beautiful_sunset_poland_sea.jpg',
-          },
-          {
-            title: 'image',
-            src: 'https://pbs.twimg.com/profile_images/1098225250469326848/2KN00JjZ_400x400.png',
-          },
-          {
-            title: 'image',
-            src: 'https://www.planetware.com/wpimages/2019/11/canada-in-pictures-beautiful-places-to-photograph-morraine-lake.jpg',
-          },
-
-        ],
-        [
-          {
-            title: 'image',
-            src: 'https://www.planetware.com/wpimages/2020/01/india-in-pictures-beautiful-places-to-photograph-taj-mahal.jpg',
-          },
-          {
-            title: 'image',
-            src: 'https://drifterplanet.com/wp-content/uploads/2017/12/Cancun-Private-Beach-Party.jpg',
-          },
-          {
-            title: 'image',
-            src: 'https://media.istockphoto.com/photos/villefranche-on-sea-in-evening-picture-id1145618475?k=6&m=1145618475&s=612x612&w=0&h=u6mv9zLy6WWdxnGxJ4i3bYOFQYJtxjmnkvgVoaGqf_U=',
-
-          },
-
-        ],
-        [
-          {
-            title: 'image',
-            src: 'https://media-exp1.licdn.com/dms/image/C4E1BAQE-Zxrt-01Idw/company-background_10000/0/1615323777521?e=2159024400&v=beta&t=8U_G8GwdzneRm4cihyeOfmKKJjk0e-qtZHmWqX4b1NQ',
-
-          },
-          {
-            title: 'image',
-            src: 'https://www.planetware.com/wpimages/2020/01/china-in-pictures-beautiful-places-to-photograph-the-great-wall.jpg',
-
-          },
-          {
-
-            src: 'https://i.pinimg.com/originals/50/df/34/50df34b9e93f30269853b96b09c37e3b.jpg',
-            likes: '1324',
-            views: '14k',
-            comments: '132',
-            description: 'Lorem ipsum '
-          },
-
-        ],
+        [],
+        [],
+        [],
+        [],
+        [],
       ]
     }
   },
+
+  mounted() {
+
+    if (localStorage.getItem('images')) {
+      this.images = JSON.parse(localStorage.getItem('images'));
+    }
+
+  },
+
   methods: {
 
     saveImage(img) {
       this.addImageToArray(img);
+    },
+
+    deleteImage(image) {
+
+      this.images = this.images.map(col => col.filter(i => i !== image));
+      this.saveToLocalStorage(this.images);
+
     },
 
     zoomImage(image) {
@@ -123,6 +63,10 @@ export default {
       this.isZoomed = false;
     },
 
+    saveToLocalStorage(images) {
+      localStorage.setItem('images', JSON.stringify(images));
+    },
+
     addImageToArray(img) {
 
       const lengthsOfColumns = this.images.map(col => col.length);
@@ -131,6 +75,8 @@ export default {
       const indexCol = lengthsOfColumns.indexOf(Math.min(...lengthsOfColumns));
 
       this.images[indexCol] = [...this.images[indexCol], img];
+
+      this.saveToLocalStorage(this.images);
 
     },
   },

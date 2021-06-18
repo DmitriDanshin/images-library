@@ -4,7 +4,8 @@
     <div class="grid grid-cols-5 gap-4 mx-4 ">
 
       <div v-for="imagesColumn in imagesColumns" class="h-full" :key="imagesColumn">
-        <image-card v-for="image in imagesColumn" :image="image" :key="image" @zoom="zoom(image)"/>
+        <image-card v-for="image in imagesColumn" :image="image" :key="image" @zoom="zoom(image)"
+                    @contextmenu.prevent="deleteImage(image)"/>
       </div>
 
 
@@ -21,7 +22,8 @@ export default {
   IMAGE_HEIGHT_LIMIT: 350,
 
   emits: {
-    'zoom': null
+    'zoom': null,
+    'delete-image': null,
   },
 
   props: {
@@ -43,19 +45,10 @@ export default {
       this.$emit('zoom', image);
     },
 
-    normalizeHeightOfImage(img, imagesColumn, event) {
+    deleteImage(image) {
+      this.$emit('delete-image', image);
+    }
 
-      if (event.target.height > this.$options.IMAGE_HEIGHT_LIMIT) {
-
-        // const indexCol = this.images.indexOf(imagesColumn);
-        // const indexImg = this.images[indexCol].indexOf(img);
-
-        // event.target.style.height = `${this.$options.IMAGE_HEIGHT_LIMIT}px`;
-        event.target.style.height = `auto`;
-
-
-      }
-    },
   },
 
 }
